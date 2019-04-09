@@ -1,15 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSVReader.Classes;
+using CSVReader.Core.Interfaces;
+using System;
+using System.Configuration;
 
 namespace CSVReader
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
+            var path = ConfigurationManager.AppSettings["CSVFilePath"];
+            IFileProcessor fileProcessor;
+
+            Console.WriteLine($"Configured path for reading the csv files is: {path}");
+            Console.WriteLine($"It reads LP and TOU files and find values that are 20% above or below the median, and print to the console\n");
+
+            try
+            {
+                fileProcessor = new LPFileProcessor();
+                fileProcessor.ProcessFiles(path);
+
+                fileProcessor = new TOUFileProcessor();
+                fileProcessor.ProcessFiles(path);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
