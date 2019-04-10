@@ -1,5 +1,4 @@
-﻿
-namespace CSVReader.Core.Enums
+﻿namespace CSVReader.Core.Enums
 {
     public enum FileType
     {

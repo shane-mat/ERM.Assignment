@@ -1,5 +1,5 @@
-﻿using CSVReader.Classes;
-using CSVReader.Core.Interfaces;
+﻿using CSVReader.Core.Interfaces;
+using CSVReader.FileProcessor;
 using System;
 using System.Configuration;
 

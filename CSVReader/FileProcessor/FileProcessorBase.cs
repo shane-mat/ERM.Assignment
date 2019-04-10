@@ -1,11 +1,11 @@
-﻿using CSVReader.Core.Interfaces;
-using CSVReader.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CSVReader.Core.Interfaces;
+using CSVReader.Utils;
 
-namespace CSVReader.Classes
+namespace CSVReader.FileProcessor
 {
     public abstract class FileProcessorBase<T> : IFileProcessor
     {
@@ -27,39 +27,30 @@ namespace CSVReader.Classes
             return Directory.EnumerateFiles(filePath).Where(w => w.Contains(fileType));
         }
 
-        protected List<string> GetValuesForPrint(IEnumerable<T> values, string file)
+        public IEnumerable<T> SelectValuesSatisfiedTheCondition(IEnumerable<T> values, string file, double median)
         {
             try
             {
-                var median = values.Select(ComparisonValue).GetMedian();
                 var percentofMedian = Helper.CalculatePercentageValue(median, percentage);
-                var selectedValues = values.Where(c => !Helper.CheckNearlyEquals(ComparisonValue(c), 0) &&
-                             Helper.CheckNearlyEquals(Math.Abs(median - ComparisonValue(c)), percentofMedian)).Select(r => r);
-
-                return FormatValues(selectedValues, file, median);
+                return values.Where(c => !Helper.CheckAlmostEquals(ComparisonValue(c), 0) &&
+                              Helper.CheckAlmostEquals(Math.Abs(median - ComparisonValue(c)), percentofMedian)).Select(r => r);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
-            return new List<string>();
+            return new List<T>();
         }
 
-        protected void PrintValues(List<string> values)
+        protected void PrintValues(IEnumerable<T> values, string file, double median)
         {
-            foreach (var value in values)
+            var formatedValues = values.Select(value => $"{file} {DateTimeValue(value)} {ComparisonValue(value)} {median}   \n");
+
+            foreach (var value in formatedValues)
             {
                 Console.Write(value);
             }
-        }
-
-        private List<string> FormatValues(IEnumerable<T> values, string file, double median)
-        {
-            var formatedValues = new List<string>();
-
-            formatedValues.AddRange(values.Select(value => $"{file} {DateTimeValue(value)} {ComparisonValue(value)} {median}   \n"));
-            return formatedValues;
         }
     }
 }

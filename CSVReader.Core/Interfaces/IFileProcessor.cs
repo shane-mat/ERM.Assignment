@@ -1,5 +1,4 @@
-﻿
-namespace CSVReader.Core.Interfaces
+﻿namespace CSVReader.Core.Interfaces
 {
     public interface IFileProcessor
     {

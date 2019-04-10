@@ -1,8 +1,10 @@
-﻿using CSVReader.Core.Enums;
+﻿using System;
+using CSVReader.Core.Enums;
 using CSVReader.Core.Models;
-using System;
+using System.Linq;
+using CSVReader.Utils;
 
-namespace CSVReader.Classes
+namespace CSVReader.FileProcessor
 {
     public class LPFileProcessor : FileProcessorBase<LPFileModel>
     {
@@ -13,8 +15,10 @@ namespace CSVReader.Classes
                 foreach (var file in GetFileNames(filePath, FileType.LP.ToString()))
                 {
                     var values = ReadFile(file, LPFileModel.MapItems);
-                    var selectedValues = GetValuesForPrint(values, System.IO.Path.GetFileNameWithoutExtension(file));
-                    PrintValues(selectedValues);
+                    var median = values.Select(ComparisonValue).GetMedianValue();
+                    var fileName = System.IO.Path.GetFileNameWithoutExtension(file);
+                    var selectedValues = SelectValuesSatisfiedTheCondition(values, fileName, median);
+                    PrintValues(selectedValues, fileName, median);
                 }                 
             }
             catch (Exception ex)

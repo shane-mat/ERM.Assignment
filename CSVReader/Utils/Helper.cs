@@ -6,7 +6,7 @@ namespace CSVReader.Utils
 {
    public static class Helper
     {
-        public static T GetMedian<T>(this IEnumerable<T> items)
+        public static T GetMedianValue<T>(this IEnumerable<T> items)
         {
             var i = (int)Math.Ceiling((double)(items.Count() - 1) / 2);
             if (i >= 0)
@@ -23,9 +23,9 @@ namespace CSVReader.Utils
             return (value / 100) * percentage;
         }
 
-        public static bool CheckNearlyEquals(double value1, double value2)
+        public static bool CheckAlmostEquals(double value1, double value2)
         {
-            return Math.Abs(value1 - value2) < (.0001);
+            return Math.Abs(value1 - value2) <= 0.0001;
         }
     }
 }
